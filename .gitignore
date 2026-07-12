@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Virtual environment
+venv/
+
+# Environment variables - NEVER commit this
+.env
+
+# Model cache - these are huge
+.cache/
+__pycache__/
+
+# Audio test files
+*.mp3
+*.wav
+*.m4a
