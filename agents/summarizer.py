@@ -29,8 +29,7 @@ SOAP Note:
 def summarize_to_soap(transcript: str) -> SOAPNoteOutput:
     start = time.time()
 
-    prompt = SOAP_PROMPT.format(transcript=transcript)
-    result = summarizer(prompt, truncation=True)
+    result = summarizer(transcript, truncation=True)
     soap_note = result[0]["summary_text"].strip()
 
     elapsed = round(time.time() - start, 2)
