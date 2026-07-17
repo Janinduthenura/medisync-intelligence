@@ -20,7 +20,7 @@ def transcribe_audio(audio_path: str) -> TranscriptionOutput:
     elapsed = time.time() - start
 
     return TranscriptionOutput(
-        transcript=result["text"],
+        text=result["text"],
         model_used="openai/whisper-base",
         duration_seconds=elapsed
     )

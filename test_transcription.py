@@ -7,6 +7,6 @@ AUDIO_FILE = "test_audio.mp3"
 output = transcribe_audio(AUDIO_FILE)
 
 print("\n--- Transcription Result ---")
-print(f"Transcript : {output.transcript}")
+print(f"Transcript : {output.text}")
 print(f"Time taken : {output.duration_seconds}s")
 print(f"Model used : {output.model_used}")
