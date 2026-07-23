@@ -1,4 +1,17 @@
 from pydantic import BaseModel
+from typing import Optional
+
+class SOAPSections(BaseModel):
+    subjective: str
+    objective: str
+    assessment: str
+    plan: str
+
+class SOAPNoteOutput(BaseModel):
+    soap_note: str           # full formatted string — for display
+    sections: SOAPSections   # individual parts — for eval
+    duration_seconds: float
+    model_used: str
 
 class TranscriptionOutput(BaseModel):
     text: str                  # make sure this matches
@@ -7,11 +20,6 @@ class TranscriptionOutput(BaseModel):
 
 class SummarizeRequest(BaseModel):
     text: str
-
-class SOAPNoteOutput(BaseModel):
-    soap_note: str
-    duration_seconds: float
-    model_used: str
 
 class PipelineOutput(BaseModel):
     transcript: str
