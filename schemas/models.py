@@ -24,5 +24,6 @@ class SummarizeRequest(BaseModel):
 class PipelineOutput(BaseModel):
     transcript: str
     soap_note: str
+    sections: SOAPSections
     transcription_seconds: float
     summarization_seconds: float

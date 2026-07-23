@@ -21,7 +21,7 @@ def health_check():
     return {
         "status": "ok",
         "whisper": "loaded",
-        "bart": "loaded"
+        "flan_t5": "loaded"
     }
 
 @app.post("/transcribe", response_model=TranscriptionOutput)
@@ -50,11 +50,11 @@ async def transcribe(file: UploadFile = File(...)):
 @app.post("/summarize", response_model=SOAPNoteOutput)
 def summarize(request: SummarizeRequest):
     if not request.text.strip():
-        raise HTTPException(
-            status_code=400,
-            detail="Transcript text cannot be empty"
-        )
-    return summarize_to_soap(request.text)
+        raise HTTPException(status_code=400, detail="Transcript text cannot be empty")
+    try:
+        return summarize_to_soap(request.text)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
 @app.post("/pipeline", response_model=PipelineOutput)
 async def full_pipeline(file: UploadFile = File(...)):
@@ -77,6 +77,7 @@ async def full_pipeline(file: UploadFile = File(...)):
     return PipelineOutput(
         transcript=transcription.text,
         soap_note=soap.soap_note,
+        sections=soap.sections,
         transcription_seconds=transcription.duration_seconds,
         summarization_seconds=soap.duration_seconds
     )
