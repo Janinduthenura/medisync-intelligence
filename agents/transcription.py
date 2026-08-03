@@ -17,7 +17,7 @@ def transcribe_audio(audio_path: str) -> TranscriptionOutput:
     start = time.time()
     audio, sr = librosa.load(audio_path, sr=16000)
     result = asr({"array": audio, "sampling_rate": sr})
-    elapsed = time.time() - start
+    elapsed = round(time.time() - start, 2)
 
     return TranscriptionOutput(
         text=result["text"],
