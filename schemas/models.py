@@ -1,5 +1,17 @@
 from pydantic import BaseModel
 from typing import Optional
+from typing import List
+
+class ExtractedEntity(BaseModel):
+    text: str
+    label: str
+    confidence: float
+
+class NEROutput(BaseModel):
+    entities: List[ExtractedEntity]
+    urgency: str
+    urgency_confidence: float
+    duration_seconds: float
 
 class SOAPSections(BaseModel):
     subjective: str

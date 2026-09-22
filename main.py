@@ -9,6 +9,14 @@ from schemas.models import (
     SOAPNoteOutput,
     PipelineOutput
 )
+from agents.ner import extract_entities
+from schemas.models import NEROutput  # add to existing import line
+
+@app.post("/ner", response_model=NEROutput)
+def ner(request: SummarizeRequest):
+    if not request.text.strip():
+        raise HTTPException(status_code=400, detail="Transcript text cannot be empty")
+    return extract_entities(request.text)
 
 app = FastAPI(
     title="MediSync Intelligence",
