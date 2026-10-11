@@ -3,6 +3,9 @@ from transformers import pipeline
 from schemas.models import ExtractedEntity, NEROutput
 
 print("Loading biomedical NER model...")
+
+
+
 ner_pipeline = pipeline(
     "token-classification",
     model="d4data/biomedical-ner-all",
@@ -31,7 +34,20 @@ URGENCY_LABEL_MAP = {
     "Therapeutic_procedure": "PROCEDURE",
     "Diagnostic_procedure": "PROCEDURE",
     "Biological_structure": "ANATOMY",  # not in your original 5, but genuinely distinct info worth keeping
+    "routine medical visit": "ROUTINE",
+    "urgent medical attention": "URGENT",
+    "emergency medical situation": "EMERGENCY",
 }
+
+LABEL_MAP = {
+    "Sign_symptom": "SYMPTOM",
+    "Medication": "DRUG",
+    "Dosage": "DOSAGE",
+    "Disease_disorder": "CONDITION",
+    "Therapeutic_procedure": "PROCEDURE",
+    "Diagnostic_procedure": "PROCEDURE",
+    "Biological_structure": "ANATOMY",
+}   
 
 def extract_entities(transcript: str) -> NEROutput:
     start = time.time()

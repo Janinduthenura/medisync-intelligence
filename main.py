@@ -7,22 +7,23 @@ from schemas.models import (
     TranscriptionOutput,
     SummarizeRequest,
     SOAPNoteOutput,
-    PipelineOutput
+    PipelineOutput,
+    NEROutput,
 )
 from agents.ner import extract_entities
 from schemas.models import NEROutput  # add to existing import line
-
-@app.post("/ner", response_model=NEROutput)
-def ner(request: SummarizeRequest):
-    if not request.text.strip():
-        raise HTTPException(status_code=400, detail="Transcript text cannot be empty")
-    return extract_entities(request.text)
 
 app = FastAPI(
     title="MediSync Intelligence",
     description="Multi-agent clinical note assistant",
     version="0.1.0"
 )
+
+@app.post("/ner", response_model=NEROutput)
+def ner(request: SummarizeRequest):
+    if not request.text.strip():
+        raise HTTPException(status_code=400, detail="Transcript text cannot be empty")
+    return extract_entities(request.text)
 
 @app.get("/health")
 def health_check():
@@ -89,3 +90,4 @@ async def full_pipeline(file: UploadFile = File(...)):
         transcription_seconds=transcription.duration_seconds,
         summarization_seconds=soap.duration_seconds
     )
+
