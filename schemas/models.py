@@ -2,6 +2,21 @@ from pydantic import BaseModel
 from typing import Optional
 from typing import List
 
+class DrugCheck(BaseModel):
+    name: str
+    status: str                      # VALIDATED, FLAGGED, UNVERIFIED
+    generic_name: Optional[str] = None
+
+class DrugValidationRequest(BaseModel):
+    drugs: List[str]
+
+class DrugValidationOutput(BaseModel):
+    validated_drugs: List[str]
+    flagged_drugs: List[str]
+    unverified_drugs: List[str]
+    checks: List[DrugCheck]
+    duration_seconds: float 
+
 class ExtractedEntity(BaseModel):
     text: str
     label: str

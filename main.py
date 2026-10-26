@@ -3,27 +3,23 @@ import tempfile
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from agents.transcription import transcribe_audio
 from agents.summarizer import summarize_to_soap
+from agents.ner import extract_entities
+from agents.drug_validator import validate_drugs
 from schemas.models import (
     TranscriptionOutput,
     SummarizeRequest,
     SOAPNoteOutput,
     PipelineOutput,
     NEROutput,
+    DrugValidationRequest,
+    DrugValidationOutput,
 )
-from agents.ner import extract_entities
-from schemas.models import NEROutput  # add to existing import line
 
 app = FastAPI(
     title="MediSync Intelligence",
     description="Multi-agent clinical note assistant",
     version="0.1.0"
 )
-
-@app.post("/ner", response_model=NEROutput)
-def ner(request: SummarizeRequest):
-    if not request.text.strip():
-        raise HTTPException(status_code=400, detail="Transcript text cannot be empty")
-    return extract_entities(request.text)
 
 @app.get("/health")
 def health_check():
@@ -65,6 +61,18 @@ def summarize(request: SummarizeRequest):
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
+@app.post("/ner", response_model=NEROutput)
+def ner(request: SummarizeRequest):
+    if not request.text.strip():
+        raise HTTPException(status_code=400, detail="Transcript text cannot be empty")
+    return extract_entities(request.text)
+
+@app.post("/validate-drugs", response_model=DrugValidationOutput)
+def validate(request: DrugValidationRequest):
+    if not request.drugs:
+        raise HTTPException(status_code=400, detail="Drug list cannot be empty")
+    return validate_drugs(request.drugs)
+
 @app.post("/pipeline", response_model=PipelineOutput)
 async def full_pipeline(file: UploadFile = File(...)):
     # Step 1: transcribe
@@ -90,4 +98,3 @@ async def full_pipeline(file: UploadFile = File(...)):
         transcription_seconds=transcription.duration_seconds,
         summarization_seconds=soap.duration_seconds
     )
-
